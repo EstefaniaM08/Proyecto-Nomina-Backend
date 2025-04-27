@@ -75,6 +75,9 @@ public class PersonaServiciosImpl implements PersonaServicios {
     }
     @Override
     public PersonaDTO registrar(PersonaDTO persona) {
+        if (valExisIdenti(persona.getIdentificacion())) {
+            throw new RuntimeException("La persona con identificación " + persona.getIdentificacion() + " no existe.");
+        }
         Persona person = Persona.builder()
                 .id(persona.getId())
                 .identificacion(persona.getIdentificacion())
