@@ -7,12 +7,7 @@ import java.util.List;
 
 public interface PersonaServicios {
 
-    List<PersonaDTO> personas();
-    PersonaDTO persona(String id);
     PersonaDTO registrar(PersonaDTO persona);
-    void actualizar(PersonaDTO persona);
-    void desactivar(String id);
     boolean valExisCorreo(String correo);
-
     boolean valExisIdenti(String identificacion);
 }
