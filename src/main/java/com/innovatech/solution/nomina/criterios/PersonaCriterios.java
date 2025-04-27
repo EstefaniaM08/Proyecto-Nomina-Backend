@@ -1,7 +1,6 @@
 package com.innovatech.solution.nomina.criterios;
 
 import io.github.jhipster.service.filter.BigDecimalFilter;
-import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.StringFilter;
 import lombok.Data;
 
