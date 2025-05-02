@@ -1,4 +1,4 @@
-FROM maven:3.9.6-eclipse-temurin-21
+FROM maven:3.9.4-eclipse-temurin-17 AS build
 ENV JAVA_HOME=/opt/java/openjdk
 RUN export JAVA_HOME
 
