@@ -3,16 +3,25 @@ package com.innovatech.solution.nomina.servicios.impl;
 import com.innovatech.solution.nomina.persistencia.dta.DevengadosPrestaciones;
 import com.innovatech.solution.nomina.persistencia.dta.Nomina;
 import com.innovatech.solution.nomina.persistencia.dta.Persona;
+import com.innovatech.solution.nomina.persistencia.dto.JasperDTO;
 import com.innovatech.solution.nomina.persistencia.dto.NominaDTO;
 import com.innovatech.solution.nomina.persistencia.repositorio.DevengadosPrestacionesRepositorio;
 import com.innovatech.solution.nomina.persistencia.repositorio.NominaRepositorio;
 import com.innovatech.solution.nomina.persistencia.repositorio.PersonaRepositorio;
 import com.innovatech.solution.nomina.servicios.NominaServicios;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.util.JRLoader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -411,4 +420,55 @@ public class NominaServiciosImpl implements NominaServicios {
         // Convertir retención en UVT a pesos
         return retencionUVT.multiply(valorUVT).setScale(2, RoundingMode.HALF_UP);
     }
+
+    @Override
+    public ResponseEntity<ByteArrayResource> crearPdf(JasperDTO jasper) {
+        if (true) {
+            try {
+                final File file = ResourceUtils.getFile("classpath:Blank_A41.jasper");
+                final File codBarras = ResourceUtils.getFile("classpath:static/img/qr.jpeg");
+                final File logo = ResourceUtils.getFile("classpath:static/img/logo.jpeg");
+                final JasperReport report = (JasperReport) JRLoader.loadObject(file);
+
+                final HashMap<String, Object> parameters = new HashMap<>();
+
+
+                parameters.put("nombre", jasper.getNombre());
+                parameters.put("fecha", jasper.getFecha());
+                parameters.put("cargo", jasper.getCargo());
+                parameters.put("cedula", jasper.getCedula());
+                parameters.put("cuenta", jasper.getCuenta());
+                parameters.put("banco", jasper.getBanco());
+                parameters.put("totalPagar", jasper.getTotalPagar());
+                parameters.put("salario", jasper.getSalario());
+                parameters.put("totDev", jasper.getTotDev());
+                parameters.put("totDes", jasper.getTotDes());
+                parameters.put("codBarras", new FileInputStream(codBarras));
+                parameters.put("logo", new FileInputStream(logo));
+                System.out.println("hasta aqui 1");
+                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+                byte[] reporte = JasperExportManager.exportReportToPdf(jasperPrint);
+                String sdf = (new SimpleDateFormat("dd/MM/yyyy")).format(new Date());
+                StringBuilder stringBuilder = new StringBuilder().append("InvoicePDF:");
+                ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                        .filename(stringBuilder.append("pago")
+                                .append("generateDate:")
+                                .append(sdf)
+                                .append(".pdf")
+                                .toString())
+                        .build();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentDisposition(contentDisposition);
+                return ResponseEntity.ok().contentLength((long) reporte.length)
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .headers(headers).body(new ByteArrayResource(reporte));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+        return null;
+    }
+
 }
