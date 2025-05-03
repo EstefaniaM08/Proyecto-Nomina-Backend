@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4190fe99-b3e7-442f-9c7e-008969576275" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/nomina_back_final.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HELP.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/NominaApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/ServletInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/config/SeguridadConfiguracion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/AdministradorControlador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/ExcepcionesGlobalesController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/AdministradorDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/CambioClaveDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/exceptiones/administrador/ContraseñaIncorrectaException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/exceptiones/administrador/GeneralException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/exceptiones/administrador/TokenInvalidoException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/exceptiones/administrador/UsuarioNoEncontradoException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Administrador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/AdministradorRepositorio.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/AdministradorServicios.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/AdministradorServiciosImp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/utils/JWTUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/utils/TokenInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/innovatech/solution/nomina/NominaApplicationTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/NominaApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/ServletInitializer.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/config/SeguridadConfiguracion.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/AdministradorControlador.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/ExcepcionesGlobalesController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/AdministradorDTO$AdministradorDTOBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/AdministradorDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/CambioClaveDTO$CambioClaveDTOBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/CambioClaveDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/exceptiones/administrador/ContraseñaIncorrectaException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/exceptiones/administrador/GeneralException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/exceptiones/administrador/TokenInvalidoException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/exceptiones/administrador/UsuarioNoEncontradoException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Administrador$AdministradorBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Administrador.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Administrador_.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/repositories/AdministradorRepositorio.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/AdministradorServicios.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/impl/AdministradorServiciosImp.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/utils/JWTUtil.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/utils/TokenInfo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Administrador_.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="ms-21" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2wa9J5fPztjBShYaHI5j4Id8xu3" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "HU001__configuracion",
+    "ignore.preview.features.used": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "D:/TRABAJOS PROGRAMACION/Spring Boot/Ramas Proyectos/nomina_back_final/src/main/java/com/innovatech/solution/nomina",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "project.propVCSSupport.Mappings"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\TRABAJOS PROGRAMACION\Spring Boot\Ramas Proyectos\nomina_back_final\src\main\java\com\innovatech\solution\nomina" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.innovatech.solution.nomina.controllers" />
+      <recent name="com.innovatech.solution.nomina.dto" />
+      <recent name="com.innovatech.solution.nomina.persistence.repositories" />
+      <recent name="com.innovatech.solution.nomina.services.impl" />
+      <recent name="com.innovatech.solution.nomina.persistence.entities" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="NominaApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.innovatech.solution.nomina.NominaApplication" />
+      <module name="nomina" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.innovatech.solution.nomina.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="nomina_back_final" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="nomina_back_final" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.NominaApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4190fe99-b3e7-442f-9c7e-008969576275" name="Changes" comment="" />
+      <created>1746268743226</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1746268743226</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
