@@ -8,7 +8,6 @@ import com.innovatech.solution.nomina.exceptiones.administrador.UsuarioNoEncontr
 import com.innovatech.solution.nomina.persistence.entities.Administrador;
 import com.innovatech.solution.nomina.persistence.repositories.AdministradorRepositorio;
 import com.innovatech.solution.nomina.services.AdministradorServicios;
-import com.innovatech.solution.nomina.utils.TokenInfo;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
