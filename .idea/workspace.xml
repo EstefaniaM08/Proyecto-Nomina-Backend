@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4190fe99-b3e7-442f-9c7e-008969576275" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/JasperDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Blank_A41.jasper" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/BusquedaPagosDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/PagoNominaCriterios.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/ConsultasPagoServicios.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/ConsultasPagoServiciosImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/PagoNominaControlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/PagoNominaControlador.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/NominaServicios.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/NominaServicios.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/NominaServiciosImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/NominaServiciosImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,10 +53,10 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "HU008__generacion__desprendible",
+    "git-widget-placeholder": "HU009__consulta__nominas",
     "ignore.preview.features.used": "true",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/TRABAJOS PROGRAMACION/Spring Boot/Ramas Proyectos/nomina_back_final/src/main/resources",
+    "last_opened_file_path": "D:/TRABAJOS PROGRAMACION/Spring Boot/Ramas Proyectos/nomina_back_final/src/main/resources/static/img",
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
@@ -65,11 +65,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\TRABAJOS PROGRAMACION\Spring Boot\Ramas Proyectos\nomina_back_final\src\main\resources\static\img" />
       <recent name="D:\TRABAJOS PROGRAMACION\Spring Boot\Ramas Proyectos\nomina_back_final\src\main\resources" />
       <recent name="D:\TRABAJOS PROGRAMACION\Spring Boot\Ramas Proyectos\nomina_back_final\src\main\java\com\innovatech\solution\nomina\persistence\repositories" />
       <recent name="D:\TRABAJOS PROGRAMACION\Spring Boot\Ramas Proyectos\nomina_back_final\src\main\java\com\innovatech\solution\nomina\persistence\entities" />
       <recent name="D:\TRABAJOS PROGRAMACION\Spring Boot\Ramas Proyectos\nomina_back_final\src\main\java\com\innovatech\solution\nomina\dto" />
-      <recent name="D:\TRABAJOS PROGRAMACION\Spring Boot\Ramas Proyectos\nomina_back_final\src\main\java\com\innovatech\solution\nomina" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\TRABAJOS PROGRAMACION\Spring Boot\Ramas Proyectos\nomina_back_final\src\main\resources" />
@@ -80,10 +80,10 @@
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.innovatech.solution.nomina.dto" />
-      <recent name="com.innovatech.solution.nomina.persistence.entities" />
-      <recent name="com.innovatech.solution.nomina.persistence.repositories" />
       <recent name="com.innovatech.solution.nomina.services.impl" />
       <recent name="com.innovatech.solution.nomina.services" />
+      <recent name="com.innovatech.solution.nomina.persistence.entities" />
+      <recent name="com.innovatech.solution.nomina.persistence.repositories" />
     </key>
   </component>
   <component name="RunManager">

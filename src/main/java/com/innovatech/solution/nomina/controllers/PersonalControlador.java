@@ -35,7 +35,7 @@ public class PersonalControlador {
     public ResponseEntity<PersonaDTO> persona(@PathVariable("identificacion") String id) {
         return new ResponseEntity<>(personaServicios.persona(id), null, HttpStatus.OK);
     }
-    @PostMapping("/busqueda-personas")
+    @GetMapping("/busqueda-personas")
     public ResponseEntity<List<Persona>> busquedaPagos(@RequestBody BusquedaPersonasDTO busquedaDTO){
         return new ResponseEntity<List<Persona>>(consultasPersonaServicios.busquedaPersonas(busquedaDTO), HttpStatus.OK);
     }
