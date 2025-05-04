@@ -27,6 +27,8 @@ import java.util.UUID;
 public class AdministradorServiciosImp implements AdministradorServicios {
     @Autowired
     AdministradorRepositorio administradorRepositorio;
+    @Autowired
+    private JavaMailSender mailSender;
 
     private Map<String, TokenInfo> tokens = new HashMap<>();
 
@@ -77,5 +79,72 @@ public class AdministradorServiciosImp implements AdministradorServicios {
         }
         // Si todo es correcto, retornar éxito
         return "Inicio de sesión exitoso";
+    }
+    @Override
+    public String enviarCambioClave(String email) {
+        //Valida si esta vacio
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("El correo no puede estar vacío");
+        }
+        //Validacion si correo existe
+        if (!valExisCorreo(email)) {
+            throw new UsuarioNoEncontradoException("El correo no está registrado");
+        }
+        // Generar un token único
+        String token = UUID.randomUUID().toString();
+        tokens.put(token,new TokenInfo(email, 10));
+
+        // Generar el enlace de recuperación
+        SimpleMailMessage mensaje = new SimpleMailMessage();
+        mensaje.setTo(email);
+        mensaje.setSubject("Recuperación de Contraseña");
+        mensaje.setText("Tu código de recuperación es: " + token + " Expira en 10 minutos.");
+
+        try {
+            mailSender.send(mensaje);
+        } catch (MailException e) {
+            throw new GeneralException("Error al enviar el correo: " + e.getMessage());
+        }
+        return "Enlace de recuperacion enviado";
+    }
+    @Override
+    public String cambiarClave(String token, String nuevaClave) {
+
+        if (token == null || token.trim().isEmpty()) {
+            throw new IllegalArgumentException("El token no puede estar vacío");
+        }
+        if (!tokens.containsKey(token)) {
+            throw new TokenInvalidoException("El token es inválido");
+        }
+        TokenInfo tokenInfo = tokens.get(token);
+
+        // Validar si el token ha expirado
+        if (tokenInfo.isExpired()) {
+            tokens.remove(token);
+            throw new TokenInvalidoException("El token ha expirado");
+        }
+
+        if (nuevaClave == null || nuevaClave.trim().isEmpty()) {
+            throw new IllegalArgumentException("La nueva contraseña no puede estar vacía");
+        }
+        if (!nuevaClave.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$")) {
+            throw new IllegalArgumentException("La contraseña no cumple con los requisitos de seguridad");
+        }
+
+        String email = tokenInfo.getEmail();
+        Administrador admin = administradorRepositorio.findByEmail(email);
+        if (admin == null) {
+            throw new UsuarioNoEncontradoException("Usuario no encontrado");
+        }
+
+        // Hash de la contraseña con Argon2
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        String hash = argon2.hash(1, 1024, 1, nuevaClave);
+        admin.setPassword(hash);
+        //guardar clave
+        administradorRepositorio.save(admin);
+        tokens.remove(token); // Eliminar el token después de usarlo
+
+        return "Contraseña cambiada con exito";
     }
 }
