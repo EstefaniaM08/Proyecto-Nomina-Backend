@@ -1,4 +1,4 @@
-package com.innovatech.solution.nomina.services.impl;
+package com.innovatech.solution.nomina.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
