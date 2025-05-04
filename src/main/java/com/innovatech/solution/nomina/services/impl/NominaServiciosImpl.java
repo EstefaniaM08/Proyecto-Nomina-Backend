@@ -1,0 +1,421 @@
+package com.innovatech.solution.nomina.services.impl;
+
+import com.innovatech.solution.nomina.dto.NominaDTO;
+import com.innovatech.solution.nomina.persistence.entities.DevengadosPrestaciones;
+import com.innovatech.solution.nomina.persistence.entities.Nomina;
+import com.innovatech.solution.nomina.persistence.entities.Persona;
+import com.innovatech.solution.nomina.persistence.repositories.DevengadosPrestacionesRepositorio;
+import com.innovatech.solution.nomina.persistence.repositories.NominaRepositorio;
+import com.innovatech.solution.nomina.persistence.repositories.PersonaRepositorio;
+import com.innovatech.solution.nomina.services.NominaServicios;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.util.JRLoader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Optional;
+
+@Service
+public class NominaServiciosImpl implements NominaServicios {
+    @Autowired
+    NominaRepositorio nominaRepositorio;
+    @Autowired
+    PersonaRepositorio personaRepositorio;
+    @Autowired
+    DevengadosPrestacionesRepositorio devPresRepositorio;
+
+    private static final BigDecimal SALARIO_MINIMO = BigDecimal.valueOf(1423500);
+    private static final BigDecimal AUXILIO_TRANSPORTE = BigDecimal.valueOf(200000);
+    private static final int HORAS_MES = 240;
+    private static final int DIAS_ANIO = 360;
+
+    @Override
+    public NominaDTO pagoNomina(NominaDTO nominaDTO) {
+        Persona persona = personaRepositorio.findByIdentificacion(nominaDTO.getIdentificacion())
+                .orElseThrow(() -> new RuntimeException("Persona no encontrada "));
+
+        LocalDate fechaIngreso = persona.getFechaIngreso();
+        if (nominaDTO.getFechaPago().isBefore(fechaIngreso)) {
+            throw new IllegalArgumentException("No se puede liquidar la nómina antes de la fecha de ingreso del empleado.");
+        }
+
+        Optional<Nomina> ultimaNomina = nominaRepositorio.findTopByPersonalIdentificacionOrderByFechaPagoDesc(nominaDTO.getIdentificacion());
+
+        if (ultimaNomina.isPresent()) {
+            LocalDate fechaUltimoPago = ultimaNomina.get().getFechaPago();
+            long diasDiferencia = ChronoUnit.DAYS.between(fechaUltimoPago, nominaDTO.getFechaPago());
+
+            if (diasDiferencia < 23) {
+                throw new IllegalArgumentException("No se puede liquidar la nómina: deben pasar al menos 23 días desde el último pago.");
+            }
+
+            if (diasDiferencia > 31) {
+                throw new IllegalArgumentException("No se puede liquidar la nómina: el periodo supera los 31 días permitidos.");
+            }
+        }
+
+       nominaDTO =  calcularPrestacionesSociales(nominaDTO);
+       nominaDTO =  calcularDeducciones(nominaDTO);
+       nominaDTO =  calcularTotales(nominaDTO);
+
+       Nomina nomina = Nomina.builder()
+               .personal(persona)
+               .fechaPago(nominaDTO.getFechaPago())
+
+               .comisiones(nominaDTO.getComisiones())
+               .viaticos(nominaDTO.getViaticos())
+               .gastosRepresentacion(nominaDTO.getGastosRepresentacion())
+               .horExtraDiu(nominaDTO.getHorExtraDiu())
+               .horExtraNoc(nominaDTO.getHorExtraNoc())
+               .horExtraDiuDomFes(nominaDTO.getHorExtraDiuDomFes())
+               .horExtraNocDomFes(nominaDTO.getHorExtraNocDomFes())
+
+               .subsidioTransporte(nominaDTO.getSubsidioTransporte())
+               .prima(nominaDTO.getPrima())
+               .cesantias(nominaDTO.getCesantias())
+               .vacaciones(nominaDTO.getVacaciones())
+
+               .salud(nominaDTO.getSalud())
+               .pencion(nominaDTO.getPension()) // ¡OJO! en entidad está mal escrito como "pencion"
+               .retencionFuente(nominaDTO.getRetencionFuente())
+               .fondoSolid(nominaDTO.getFondoSolid())
+
+               .totDescuetos(nominaDTO.getTotDescuetos())
+               .totDevengados(nominaDTO.getTotDevengados())
+               .pagoFinal(nominaDTO.getPagoFinal())
+               .build();
+
+       nominaRepositorio.save(nomina);
+       return nominaDTO;
+    }
+    public NominaDTO calcularPrestacionesSociales(NominaDTO nominaDTO){
+        Persona persona = personaRepositorio.findByIdentificacion(nominaDTO.getIdentificacion())
+                .orElseThrow(() -> new RuntimeException("Persona no encontrada con identificación: " + nominaDTO.getIdentificacion()));
+
+        nominaDTO.setSalario(persona.getSalario());
+
+        //PAGOS MENSUALES
+        BigDecimal valAuxTrasporte = calcularAuxilioTransporte(nominaDTO.getSalario()); //SE CALCULA EL AUXILIO DE TRASNPORTE
+        BigDecimal valHorExtra = calcularPagoHorasExtras(nominaDTO); //SE CALCULA EL VALOR A PAGAR POR HORAS EXTRA EN EL MES
+
+        //Calculos Devengados Prestaciones
+        BigDecimal salDev = valAuxTrasporte.add(valHorExtra).add(nominaDTO.getSalario()).add(nominaDTO.getComisiones());
+        guardarDevPrima(nominaDTO.getIdentificacion(),persona.getFechaIngreso(), salDev);
+        guardarDevCesantias(nominaDTO.getIdentificacion(),persona.getFechaIngreso(), salDev);
+
+
+        //PAGOS PRESTACIONES SOCIALES
+        BigDecimal prima = calcularPrima(persona, nominaDTO);
+        BigDecimal cesantias = calcularCesantias(persona, nominaDTO);
+
+        //guardarDevVacaiones(nominaDTO.getIdentificacion(),persona.getFechaIngreso(), salDev);
+        //BigDecimal vacaciones = calcularVacaciones(persona, nominaDTO);
+
+
+        nominaDTO.setSubsidioTransporte(valAuxTrasporte);
+        nominaDTO.setPrima(prima);
+        nominaDTO.setCesantias(cesantias);
+        // nominaDTO.setVacaciones(vacaciones); // cuando lo actives
+        nominaDTO.setTotValHorExtra(valHorExtra);
+
+        return nominaDTO;
+    }
+    public NominaDTO calcularDeducciones(NominaDTO nominaDTO){
+        BigDecimal salud = calcularSalud(nominaDTO);
+        nominaDTO.setSalud(salud);
+
+        BigDecimal pension = calcularPension(nominaDTO);
+        nominaDTO.setPension(pension);
+
+        BigDecimal fondoSolidaridad = calcularFondoSolidaridad(nominaDTO);
+        nominaDTO.setFondoSolid(fondoSolidaridad);
+
+        BigDecimal retencionFuente = calcularRetencionFuente(nominaDTO);
+        nominaDTO.setRetencionFuente(retencionFuente);
+
+        return nominaDTO;
+    }
+    private NominaDTO calcularTotales(NominaDTO nominaDTO){
+        // Calcular total devengado
+        BigDecimal totDevengados = nominaDTO.getSalario()
+                .add(nominaDTO.getSubsidioTransporte())
+                .add(nominaDTO.getPrima())
+                .add(nominaDTO.getCesantias())
+                //.add(nominaDTO.getVacaciones())
+                .add(nominaDTO.getTotValHorExtra())
+                .add(nominaDTO.getComisiones())
+                .add(nominaDTO.getViaticos())
+                .add(nominaDTO.getGastosRepresentacion());
+
+        // Calcular total descuentos
+        BigDecimal totDescuentos = nominaDTO.getSalud()
+                .add(nominaDTO.getPension())
+                .add(nominaDTO.getRetencionFuente())
+                .add(nominaDTO.getFondoSolid());
+
+        // Calcular pago final
+        BigDecimal pagoFinal = totDevengados.subtract(totDescuentos);
+
+        // Asignar los valores a nominaDTO
+        nominaDTO.setTotDevengados(totDevengados);
+        nominaDTO.setTotDescuetos(totDescuentos);
+        nominaDTO.setPagoFinal(pagoFinal);
+
+        return nominaDTO;
+    }
+    //Metodo para calcular si aplica auxilio de transporte
+    public BigDecimal calcularAuxilioTransporte(BigDecimal sueldo) {
+        if (sueldo.compareTo(this.SALARIO_MINIMO.multiply(BigDecimal.valueOf(2))) <= 0) {
+            return this.AUXILIO_TRANSPORTE;
+        } else {
+            return BigDecimal.ZERO;
+        }
+    }
+    //se calcula el valor a pagar de las horas extra
+    private BigDecimal calcularPagoHorasExtras(NominaDTO nominaDTO) {
+        BigDecimal valorHoraOrdinaria = nominaDTO.getSalario().divide(BigDecimal.valueOf(HORAS_MES), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal totalPagoHorasExtras = BigDecimal.ZERO;
+
+        // Cálculo de horas extras diurnas
+        totalPagoHorasExtras = totalPagoHorasExtras.add(valorHoraOrdinaria.multiply(BigDecimal.valueOf(nominaDTO.getHorExtraDiu())).multiply(new BigDecimal("1.25")));
+
+        // Cálculo de horas extras nocturnas
+        totalPagoHorasExtras = totalPagoHorasExtras.add(valorHoraOrdinaria.multiply(BigDecimal.valueOf(nominaDTO.getHorExtraNoc())).multiply(new BigDecimal("1.75")));
+
+        // Cálculo de horas extras diurnas en domingos y festivos
+        totalPagoHorasExtras = totalPagoHorasExtras.add(valorHoraOrdinaria.multiply(BigDecimal.valueOf(nominaDTO.getHorExtraDiuDomFes())).multiply(new BigDecimal("1.75")));
+
+        // Cálculo de horas extras nocturnas en domingos y festivos
+        totalPagoHorasExtras = totalPagoHorasExtras.add(valorHoraOrdinaria.multiply(BigDecimal.valueOf(nominaDTO.getHorExtraNocDomFes())).multiply(new BigDecimal("2.0")));
+
+        return totalPagoHorasExtras;
+    }
+    public void guardarDevPrima(String identificacion,LocalDate fechaIngreso, BigDecimal salDev) {
+        DevengadosPrestaciones devengadosPrestaciones = devPresRepositorio.findByIdentificacion(identificacion)
+                .orElseGet(() -> DevengadosPrestaciones.builder()
+                        .identificacion(identificacion)
+                        .fecPagoPrima(fechaIngreso)
+                        .fecPagoCesantias(fechaIngreso)
+                        .fecPagoVacaciones(fechaIngreso)
+                        .salariosDevengadosCesantias(BigDecimal.ZERO)
+                        .salariosDevengadosVacaciones(BigDecimal.ZERO)
+                        .salariosDevengadosPrima(BigDecimal.ZERO) // Se inicia en 0 si es nuevo
+                        .build()
+                );
+
+        // Sumar el salario devengado, ya sea un registro existente o nuevo
+        devengadosPrestaciones.setSalariosDevengadosPrima(
+                devengadosPrestaciones.getSalariosDevengadosPrima().add(salDev)
+        );
+
+        // Guardar el registro en la base de datos
+        devPresRepositorio.save(devengadosPrestaciones);
+    }
+    public BigDecimal calcularPrima(Persona persona, NominaDTO nominaDTO) {
+        LocalDate fechaPago = nominaDTO.getFechaPago();
+        int mes = fechaPago.getMonthValue();
+
+        // Validar que la fecha de pago sea antes del 30 de junio o del 20 de diciembre
+        if (!(mes == 6 || mes == 12)) {
+            return BigDecimal.ZERO;
+        }
+
+        LocalDate fechaInicio = persona.getFechaIngreso();
+        LocalDate ultimaFechaPagoPrima = devPresRepositorio.findUltimaFechaPagoPrima(nominaDTO.getIdentificacion());
+        BigDecimal salariosDevengados = devPresRepositorio.findSalariosDevengadosPrima(nominaDTO.getIdentificacion());
+
+        // Determinar la fecha de inicio para el cálculo
+        LocalDate fechaInicioCalculo = (ultimaFechaPagoPrima != null && ultimaFechaPagoPrima.isAfter(fechaInicio))
+                ? ultimaFechaPagoPrima.plusDays(1)
+                : fechaInicio;
+
+        // Calcular los días trabajados en el período
+        long diasTrabajados = ChronoUnit.DAYS.between(fechaInicioCalculo, fechaPago) + 1;
+
+        // Calcular la prima de servicios
+        BigDecimal prima = salariosDevengados
+                .divide(BigDecimal.valueOf(6), 2, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(diasTrabajados))
+                .divide(BigDecimal.valueOf(DIAS_ANIO), 2, RoundingMode.HALF_UP);
+
+        devPresRepositorio.actualizarRegistroPrima(nominaDTO.getIdentificacion(), fechaPago);
+        return prima;
+    }
+    public void guardarDevCesantias(String identificacion, LocalDate fechaIngreso, BigDecimal salDev) {
+        DevengadosPrestaciones devengadosPrestaciones = devPresRepositorio.findByIdentificacion(identificacion)
+                .orElseGet(() -> DevengadosPrestaciones.builder()
+                        .identificacion(identificacion)
+                        .fecPagoCesantias(fechaIngreso)
+                        .salariosDevengadosCesantias(BigDecimal.ZERO) // Inicia en 0 si es nuevo
+                        .build()
+                );
+        // Sumar el salario devengado, ya sea un registro existente o nuevo
+        devengadosPrestaciones.setSalariosDevengadosCesantias(
+                devengadosPrestaciones.getSalariosDevengadosCesantias().add(salDev)
+        );
+        // Guardar el registro en la base de datos
+        devPresRepositorio.save(devengadosPrestaciones);
+    }
+    public BigDecimal calcularCesantias(Persona persona, NominaDTO nominaDTO) {
+        LocalDate fechaPago = nominaDTO.getFechaPago();
+        int mes = fechaPago.getMonthValue();
+        int dia = fechaPago.getDayOfMonth();
+
+        // Validar que solo se puedan liquidar cesantías entre el 1 de enero y el 15 de febrero
+        if (!(mes == 1 || (mes == 2 && dia <= 15))) {
+            return BigDecimal.ZERO;
+        }
+
+        LocalDate fechaInicio = persona.getFechaIngreso();
+        LocalDate ultimaFechaPagoCesantias = devPresRepositorio.findUltimaFechaPagoCesantias(nominaDTO.getIdentificacion());
+        BigDecimal salariosDevengadosCesantias = devPresRepositorio.findSalariosDevengadosCesantias(nominaDTO.getIdentificacion());
+
+        // Determinar la fecha de inicio para el cálculo
+        LocalDate fechaInicioCalculo = (ultimaFechaPagoCesantias != null && ultimaFechaPagoCesantias.isAfter(fechaInicio))
+                ? ultimaFechaPagoCesantias.plusDays(1)
+                : fechaInicio;
+
+        // Calcular los días trabajados en el período
+        long diasTrabajados = ChronoUnit.DAYS.between(fechaInicioCalculo, fechaPago) + 1;
+
+        // Calcular las cesantías
+        BigDecimal cesantias = salariosDevengadosCesantias
+                .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(diasTrabajados))
+                .divide(BigDecimal.valueOf(DIAS_ANIO), 2, RoundingMode.HALF_UP);
+
+        // Actualizar la tabla después del pago
+        devPresRepositorio.actualizarRegistroCesantias(nominaDTO.getIdentificacion(), fechaPago);
+        return cesantias;
+    }
+    /*
+    public void guardarDevVacaiones(String identificacion, LocalDate fechaIngreso, BigDecimal salDev) {
+        Optional<DevengadosPrestaciones> registroExistente = devPresRepositorio.findByIdentificacion(identificacion);
+
+        if (registroExistente.isPresent()) {
+            // Si el usuario ya existe, sumar el nuevo salario devengado por vacaciones
+            DevengadosPrestaciones devengadosPrestaciones = registroExistente.get();
+            devengadosPrestaciones.setSalariosDevengadosVacaciones(devengadosPrestaciones.getSalariosDevengadosVacaciones().add(salDev));
+            devPresRepositorio.save(devengadosPrestaciones);
+        } else {
+            // Si el usuario no existe, crear un nuevo registro
+            DevengadosPrestaciones nuevoRegistro = DevengadosPrestaciones.builder()
+                    .identificacion(identificacion)
+                    .fecPagoVacaciones(fechaIngreso) // Se coloca la fecha de ingreso como la fecha de pago inicial de vacaciones
+                    .salariosDevengadosVacaciones(salDev)
+                    .build();
+            devPresRepositorio.save(nuevoRegistro);
+        }
+    }
+    public BigDecimal calcularVacaciones(Persona persona, NominaDTO nominaDTO) {
+        LocalDate fechaInicio = persona.getFechaIngreso();
+        LocalDate ultimaFechaPagoVacaciones = devPresRepositorio.findUltimaFechaPagoVacaciones(nominaDTO.getIdentificacion());
+        BigDecimal salariosDevengadosVacaciones = devPresRepositorio.findSalariosDevengadosVacaciones(nominaDTO.getIdentificacion());
+
+        // Determinar la fecha de inicio para el cálculo
+        LocalDate fechaInicioCalculo = (ultimaFechaPagoVacaciones != null && ultimaFechaPagoVacaciones.isAfter(fechaInicio))
+                ? ultimaFechaPagoVacaciones.plusDays(1)
+                : fechaInicio;
+
+        // Calcular los días trabajados en el período
+        long diasTrabajados = ChronoUnit.DAYS.between(fechaInicioCalculo, nominaDTO.getFechaPago()) + 1;
+
+        // Calcular las vacaciones
+        BigDecimal vacaciones = salariosDevengadosVacaciones.multiply(BigDecimal.valueOf(diasTrabajados))
+                .divide(BigDecimal.valueOf(DIAS_ANIO), 2, BigDecimal.ROUND_HALF_UP);
+
+        // Actualizar la tabla después del pago
+        devPresRepositorio.actualizarRegistroVacaciones(nominaDTO.getIdentificacion(), nominaDTO.getFechaPago());
+        return vacaciones;
+    }
+     */
+    private BigDecimal calcularSalud(NominaDTO nominaDTO) {
+        BigDecimal baseCotizacion = nominaDTO.getSalario()
+                .add(nominaDTO.getTotValHorExtra()) // Incluir horas extra
+                .add(nominaDTO.getComisiones()); // Incluir comisiones si existen
+
+        return baseCotizacion.multiply(new BigDecimal("0.04")); // 4% sobre la base
+    }
+    private BigDecimal calcularPension(NominaDTO nominaDTO) {
+        BigDecimal pension = nominaDTO.getSalario()
+                .add(calcularPagoHorasExtras(nominaDTO)) // Incluir horas extras
+                .add(nominaDTO.getComisiones());         // Incluir comisiones si existen
+
+        // Calcular el aporte del empleado (4% del IBC)
+        return pension.multiply(new BigDecimal("0.04"));
+    }
+    private BigDecimal calcularFondoSolidaridad(NominaDTO nominaDTO) {
+        BigDecimal cuatroSMMLV = SALARIO_MINIMO.multiply(new BigDecimal("4"));
+        BigDecimal dieciseisSMMLV = SALARIO_MINIMO.multiply(new BigDecimal("16"));
+        BigDecimal diecisieteSMMLV = SALARIO_MINIMO.multiply(new BigDecimal("17"));
+        BigDecimal dieciochoSMMLV = SALARIO_MINIMO.multiply(new BigDecimal("18"));
+        BigDecimal diecinueveSMMLV = SALARIO_MINIMO.multiply(new BigDecimal("19"));
+        BigDecimal veinteSMMLV = SALARIO_MINIMO.multiply(new BigDecimal("20"));
+
+        BigDecimal porcentaje = BigDecimal.ZERO;
+
+        if (nominaDTO.getPension().compareTo(cuatroSMMLV) >= 0 && nominaDTO.getPension().compareTo(dieciseisSMMLV) < 0) {
+            porcentaje = new BigDecimal("0.01"); // 1.0%
+        } else if (nominaDTO.getPension().compareTo(dieciseisSMMLV) >= 0 && nominaDTO.getPension().compareTo(diecisieteSMMLV) <= 0) {
+            porcentaje = new BigDecimal("0.012"); // 1.2%
+        } else if (nominaDTO.getPension().compareTo(diecisieteSMMLV) > 0 && nominaDTO.getPension().compareTo(dieciochoSMMLV) <= 0) {
+            porcentaje = new BigDecimal("0.014"); // 1.4%
+        } else if (nominaDTO.getPension().compareTo(dieciochoSMMLV) > 0 && nominaDTO.getPension().compareTo(diecinueveSMMLV) <= 0) {
+            porcentaje = new BigDecimal("0.016"); // 1.6%
+        } else if (nominaDTO.getPension().compareTo(diecinueveSMMLV) > 0 && nominaDTO.getPension().compareTo(veinteSMMLV) <= 0) {
+            porcentaje = new BigDecimal("0.018"); // 1.8%
+        } else if (nominaDTO.getPension().compareTo(veinteSMMLV) > 0) {
+            porcentaje = new BigDecimal("0.02"); // 2.0%
+        }
+
+        return nominaDTO.getPension().multiply(porcentaje).setScale(2, RoundingMode.HALF_UP);
+    }
+    private BigDecimal calcularRetencionFuente(NominaDTO nominaDTO) {
+        // Obtener salario base, horas extras y comisiones
+        BigDecimal ingresoBruto = nominaDTO.getSalario()
+                .add(calcularPagoHorasExtras(nominaDTO))
+                .add(nominaDTO.getComisiones());
+
+        // Restar deducciones (salud y pensión)
+        BigDecimal deducciones = calcularSalud(nominaDTO).add(calcularPension(nominaDTO));
+        BigDecimal ingresoBaseRetencion = ingresoBruto.subtract(deducciones);
+
+        // Convertir IBR a UVT
+        BigDecimal valorUVT = new BigDecimal("49799"); // UVT 2025
+        BigDecimal ibrUVT = ingresoBaseRetencion.divide(valorUVT, 2, RoundingMode.HALF_UP);
+
+        // Aplicar tabla de retención en la fuente
+        BigDecimal retencionUVT = BigDecimal.ZERO;
+
+        if (ibrUVT.compareTo(new BigDecimal("95")) > 0 && ibrUVT.compareTo(new BigDecimal("150")) <= 0) {
+            retencionUVT = ibrUVT.subtract(new BigDecimal("95")).multiply(new BigDecimal("0.19"));
+        } else if (ibrUVT.compareTo(new BigDecimal("150")) > 0 && ibrUVT.compareTo(new BigDecimal("360")) <= 0) {
+            retencionUVT = ibrUVT.subtract(new BigDecimal("150")).multiply(new BigDecimal("0.28")).add(new BigDecimal("10"));
+        } else if (ibrUVT.compareTo(new BigDecimal("360")) > 0 && ibrUVT.compareTo(new BigDecimal("640")) <= 0) {
+            retencionUVT = ibrUVT.subtract(new BigDecimal("360")).multiply(new BigDecimal("0.33")).add(new BigDecimal("69"));
+        } else if (ibrUVT.compareTo(new BigDecimal("640")) > 0 && ibrUVT.compareTo(new BigDecimal("945")) <= 0) {
+            retencionUVT = ibrUVT.subtract(new BigDecimal("640")).multiply(new BigDecimal("0.35")).add(new BigDecimal("162"));
+        } else if (ibrUVT.compareTo(new BigDecimal("945")) > 0 && ibrUVT.compareTo(new BigDecimal("2300")) <= 0) {
+            retencionUVT = ibrUVT.subtract(new BigDecimal("945")).multiply(new BigDecimal("0.37")).add(new BigDecimal("268"));
+        } else if (ibrUVT.compareTo(new BigDecimal("2300")) > 0) {
+            retencionUVT = ibrUVT.subtract(new BigDecimal("2300")).multiply(new BigDecimal("0.39")).add(new BigDecimal("770"));
+        }
+
+        // Convertir retención en UVT a pesos
+        return retencionUVT.multiply(valorUVT).setScale(2, RoundingMode.HALF_UP);
+    }
+}

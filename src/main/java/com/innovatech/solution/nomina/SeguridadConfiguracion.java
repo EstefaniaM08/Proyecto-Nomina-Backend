@@ -1,4 +1,4 @@
-package com.innovatech.solution.nomina.config;
+package com.innovatech.solution.nomina;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
