@@ -11,4 +11,6 @@ public interface PersonaServicios {
     PersonaDTO registrar(PersonaDTO persona);
     boolean valExisCorreo(String correo);
     boolean valExisIdenti(String identificacion);
+    void actualizar(PersonaDTO persona);
+    void desactivar(String id);
 }
