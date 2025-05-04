@@ -7,6 +7,7 @@ import com.innovatech.solution.nomina.services.PersonaServicios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -105,6 +106,40 @@ public class PersonaServiciosImpl implements PersonaServicios {
     public boolean valExisIdenti(String identificacion) {
         boolean existe = personaRepositorio.existsByIdentificacion(identificacion);
         return existe;
+    }
+    @Override
+    public void actualizar(PersonaDTO datos){
+        // Validar si la persona existe antes de buscarla
+        if (!valExisIdenti(datos.getIdentificacion())) {
+            throw new RuntimeException("La persona con identificación " + datos.getIdentificacion() + " no existe.");
+        }
+        Optional<Persona> person = personaRepositorio.findByIdentificacion(datos.getIdentificacion());
+        //person.get().setId(datos.getId());
+        person.get().setIdentificacion(datos.getIdentificacion());
+        person.get().setNombres(datos.getNombres());
+        person.get().setApellidos(datos.getApellidos());
+        person.get().setSalario(datos.getSalario());
+        person.get().setCuentaBancaria(datos.getCuentaBancaria());
+        person.get().setFechaIngreso(datos.getFechaIngreso());
+        person.get().setFechaRetiro(datos.getFechaRetiro());
+        person.get().setFechaNac(datos.getFechaNac());
+        person.get().setTelefono(datos.getTelefono());
+        person.get().setCorreo(datos.getCorreo());
+        person.get().setCargo(datos.getCargo());
+        person.get().setArea(datos.getArea());
+        person.get().setTipoContrato(datos.getTipoContrato());
+        person.get().setBanco(datos.getBanco());
+        person.get().setEps(datos.getEps());
+        person.get().setPensiones(datos.getPensiones());
+        personaRepositorio.save(person.get());
+    }
+    @Override
+    public void desactivar(String id){
+        Optional<Persona> persona = personaRepositorio.findByIdentificacion(id);
+        LocalDate fechaActual = LocalDate.now();
+        persona.get().setEstado("Desactivado");
+        persona.get().setFechaRetiro(fechaActual);
+        personaRepositorio.save(persona.get());
     }
 
 }

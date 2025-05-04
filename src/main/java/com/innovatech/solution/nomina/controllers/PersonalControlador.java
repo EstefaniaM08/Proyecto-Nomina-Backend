@@ -47,5 +47,13 @@ public class PersonalControlador {
     public boolean validarIdentificacion(@RequestParam("identificacion") String identificacion){
         return personaServicios.valExisIdenti(identificacion);
     }
+    @PutMapping("/actualizar-persona")
+    public void actualizarPersona(@RequestBody PersonaDTO persona) {
+        personaServicios.actualizar(persona);
+    }
+    @DeleteMapping("/desactivar-persona/{id}")
+    public void desactivarPersona(@PathVariable("id") String id) {
+        personaServicios.desactivar(id);
+    }
 
 }
