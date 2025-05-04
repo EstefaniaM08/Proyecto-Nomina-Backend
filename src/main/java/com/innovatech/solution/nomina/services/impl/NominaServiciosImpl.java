@@ -1,5 +1,6 @@
 package com.innovatech.solution.nomina.services.impl;
 
+import com.innovatech.solution.nomina.dto.JasperDTO;
 import com.innovatech.solution.nomina.dto.NominaDTO;
 import com.innovatech.solution.nomina.persistence.entities.DevengadosPrestaciones;
 import com.innovatech.solution.nomina.persistence.entities.Nomina;
@@ -42,6 +43,56 @@ public class NominaServiciosImpl implements NominaServicios {
     private static final BigDecimal AUXILIO_TRANSPORTE = BigDecimal.valueOf(200000);
     private static final int HORAS_MES = 240;
     private static final int DIAS_ANIO = 360;
+
+    @Override
+    public ResponseEntity<ByteArrayResource> crearPdf(JasperDTO jasper) {
+        if (true) {
+            try {
+                final File file = ResourceUtils.getFile("classpath:Blank_A41.jasper");
+                final File codBarras = ResourceUtils.getFile("classpath:static/img/qr.jpeg");
+                final File logo = ResourceUtils.getFile("classpath:static/img/logo.jpeg");
+                final JasperReport report = (JasperReport) JRLoader.loadObject(file);
+
+                final HashMap<String, Object> parameters = new HashMap<>();
+
+
+                parameters.put("nombre", jasper.getNombre());
+                parameters.put("fecha", jasper.getFecha());
+                parameters.put("cargo", jasper.getCargo());
+                parameters.put("cedula", jasper.getCedula());
+                parameters.put("cuenta", jasper.getCuenta());
+                parameters.put("banco", jasper.getBanco());
+                parameters.put("totalPagar", jasper.getTotalPagar());
+                parameters.put("salario", jasper.getSalario());
+                parameters.put("totDev", jasper.getTotDev());
+                parameters.put("totDes", jasper.getTotDes());
+                parameters.put("codBarras", new FileInputStream(codBarras));
+                parameters.put("logo", new FileInputStream(logo));
+                System.out.println("hasta aqui 1");
+                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+                byte[] reporte = JasperExportManager.exportReportToPdf(jasperPrint);
+                String sdf = (new SimpleDateFormat("dd/MM/yyyy")).format(new Date());
+                StringBuilder stringBuilder = new StringBuilder().append("InvoicePDF:");
+                ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                        .filename(stringBuilder.append("pago")
+                                .append("generateDate:")
+                                .append(sdf)
+                                .append(".pdf")
+                                .toString())
+                        .build();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentDisposition(contentDisposition);
+                return ResponseEntity.ok().contentLength((long) reporte.length)
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .headers(headers).body(new ByteArrayResource(reporte));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+        return null;
+    }
 
     @Override
     public NominaDTO pagoNomina(NominaDTO nominaDTO) {
@@ -418,4 +469,5 @@ public class NominaServiciosImpl implements NominaServicios {
         // Convertir retención en UVT a pesos
         return retencionUVT.multiply(valorUVT).setScale(2, RoundingMode.HALF_UP);
     }
+
 }
