@@ -4,63 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4190fe99-b3e7-442f-9c7e-008969576275" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/nomina_back_final.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HELP.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/NominaApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/ServletInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/config/SeguridadConfiguracion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/AdministradorControlador.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/ExcepcionesGlobalesController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/AdministradorDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/CambioClaveDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/exceptiones/administrador/ContraseñaIncorrectaException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/exceptiones/administrador/GeneralException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/exceptiones/administrador/TokenInvalidoException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/exceptiones/administrador/UsuarioNoEncontradoException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Administrador.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/AdministradorRepositorio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/AdministradorServicios.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/AdministradorServiciosImp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/utils/JWTUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/utils/TokenInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/innovatech/solution/nomina/NominaApplicationTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/NominaApplication.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/ServletInitializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/config/SeguridadConfiguracion.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/AdministradorControlador.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/ExcepcionesGlobalesController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/AdministradorDTO$AdministradorDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/AdministradorDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/CambioClaveDTO$CambioClaveDTOBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/CambioClaveDTO.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/exceptiones/administrador/ContraseñaIncorrectaException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/exceptiones/administrador/GeneralException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/exceptiones/administrador/TokenInvalidoException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/exceptiones/administrador/UsuarioNoEncontradoException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Administrador$AdministradorBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Administrador.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Administrador_.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/repositories/AdministradorRepositorio.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/AdministradorServicios.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/impl/AdministradorServiciosImp.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/utils/JWTUtil.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/utils/TokenInfo.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Administrador_.java" afterDir="false" />
-    </list>
+    <list default="true" id="4190fe99-b3e7-442f-9c7e-008969576275" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +46,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "HU001__configuracion",
+    "git-widget-placeholder": "HU001__registrar",
     "ignore.preview.features.used": "true",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "D:/TRABAJOS PROGRAMACION/Spring Boot/Ramas Proyectos/nomina_back_final/src/main/java/com/innovatech/solution/nomina",

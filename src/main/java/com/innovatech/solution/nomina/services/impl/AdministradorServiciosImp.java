@@ -62,4 +62,20 @@ public class AdministradorServiciosImp implements AdministradorServicios {
         boolean existe = administradorRepositorio.existsByEmail(correo.trim().toLowerCase());
         return existe;
     }
+    @Override
+    public String  login(AdministradorDTO administradorDTO) {
+        if (!valExisCorreo(administradorDTO.getEmail())) {
+            throw new UsuarioNoEncontradoException("El correo no está registrado");
+        }
+        Administrador admin = administradorRepositorio.findByEmail(administradorDTO.getEmail());
+
+
+        // Desencriptar y verificar la contraseña
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        if (!argon2.verify(admin.getPassword(), administradorDTO.getPassword())) {
+            throw new ContraseñaIncorrectaException("Credenciales incorrectas");
+        }
+        // Si todo es correcto, retornar éxito
+        return "Inicio de sesión exitoso";
+    }
 }

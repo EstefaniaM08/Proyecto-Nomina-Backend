@@ -30,5 +30,11 @@ public class AdministradorControlador {
         return administradorServicios.valExisCorreo(correo);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AdministradorDTO administradorDTO) {
+        String mensaje = administradorServicios.login(administradorDTO);
+        return ResponseEntity.ok(Map.of("message", mensaje));
+    }
+
 
 }
