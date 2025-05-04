@@ -5,41 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4190fe99-b3e7-442f-9c7e-008969576275" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/CargarCamposControlador.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/PersonalControlador.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/AreaDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/BancosDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/CargoDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/EpsDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/PensionesDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/PersonaDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/TipoContratoDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Area.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Bancos.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Cargo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Eps.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Pensiones.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Persona.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/TipoContrato.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/AreaRepositorio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/BancoRepositorio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/CargoRepositorio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/EpsRepositorio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/PensionRepositorio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/PersonaRepositorio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/TipoContratoRepositorio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/CargarCamposServicios.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/PersonaServicios.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/CargarCamposServiciosImp.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/PersonaServiciosImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Area_.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Bancos_.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Cargo_.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Eps_.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Pensiones_.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Persona_.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/TipoContrato_.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/BusquedaPersonasDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/PersonaCriterios.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/ConsultasPersonaServicios.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/ConsultasPersonaServiciosImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/PersonalControlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/PersonalControlador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/PersonaRepositorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/repositories/PersonaRepositorio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/PersonaServicios.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/PersonaServicios.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/PersonaServiciosImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/PersonaServiciosImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/PersonalControlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/PersonalControlador.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/repositories/PersonaRepositorio.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/repositories/PersonaRepositorio.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/PersonaServicios.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/PersonaServicios.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/impl/PersonaServiciosImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/impl/PersonaServiciosImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +60,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "HU004__registro__empleado",
+    "git-widget-placeholder": "HU005__consulta__empleados",
     "ignore.preview.features.used": "true",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "D:/TRABAJOS PROGRAMACION/Spring Boot/Ramas Proyectos/nomina_back_final/src/main/java/com/innovatech/solution/nomina/persistence/repositories",

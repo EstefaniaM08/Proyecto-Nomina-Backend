@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.Optional;
 
-public interface PersonaRepositorio extends JpaRepository<Persona, Long> {
+public interface PersonaRepositorio extends JpaRepository<Persona, Long>, JpaSpecificationExecutor<Persona> {
     Optional<Persona> findByIdentificacion(String identificacion);
     boolean existsByCorreo(String lowerCase);
     boolean existsByIdentificacion(String identificacion);
