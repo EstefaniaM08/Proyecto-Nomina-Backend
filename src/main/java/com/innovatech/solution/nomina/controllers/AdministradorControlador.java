@@ -36,5 +36,17 @@ public class AdministradorControlador {
         return ResponseEntity.ok(Map.of("message", mensaje));
     }
 
+    @PostMapping("/envio-cambio-clave")
+    public ResponseEntity<?> enviarCambioClave(@RequestParam String email) {
+        String mensaje = administradorServicios.enviarCambioClave(email);
+        return ResponseEntity.ok(Collections.singletonMap("message", mensaje));
+    }
+
+    @PostMapping("/cambiar-clave")
+    public ResponseEntity<?> cambiarClave(@RequestBody CambioClaveDTO request) {
+        String mensaje = administradorServicios.cambiarClave(request.getToken(), request.getNuevaClave());
+        return ResponseEntity.ok(Collections.singletonMap("message", mensaje));
+    }
+
 
 }
