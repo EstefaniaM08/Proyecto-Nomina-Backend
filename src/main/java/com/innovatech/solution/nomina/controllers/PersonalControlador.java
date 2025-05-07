@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -36,9 +37,26 @@ public class PersonalControlador {
         return new ResponseEntity<>(personaServicios.persona(id), null, HttpStatus.OK);
     }
     @GetMapping("/busqueda-personas")
-    public ResponseEntity<List<Persona>> busquedaPagos(@RequestBody BusquedaPersonasDTO busquedaDTO){
-        return new ResponseEntity<List<Persona>>(consultasPersonaServicios.busquedaPersonas(busquedaDTO), HttpStatus.OK);
+    public ResponseEntity<List<Persona>> busquedaPagos(
+            @RequestParam(required = false) String identificacion,
+            @RequestParam(required = false) String apellidos,
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String area,
+            @RequestParam(required = false) String cargo,
+            @RequestParam(required = false) BigDecimal salarioDesde,
+            @RequestParam(required = false) BigDecimal salarioHasta
+    ) {
+        BusquedaPersonasDTO busquedaDTO = new BusquedaPersonasDTO();
+        busquedaDTO.setIdentificacion(identificacion);
+        busquedaDTO.setApellidos(apellidos);
+        busquedaDTO.setEstado(estado);
+        busquedaDTO.setArea(area);
+        busquedaDTO.setCargo(cargo);
+        busquedaDTO.setSalarioDesde(salarioDesde);
+        busquedaDTO.setSalarioHasta(salarioHasta);
+        return new ResponseEntity<>(consultasPersonaServicios.busquedaPersonas(busquedaDTO), HttpStatus.OK);
     }
+
     @GetMapping("/validar-correo")
     public boolean validarCorreo(@RequestParam("correo") String correo){
         return personaServicios.valExisCorreo(correo);
