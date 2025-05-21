@@ -1,5 +1,6 @@
 package com.innovatech.solution.nomina.dto;
 
+import com.innovatech.solution.nomina.persistence.entities.Persona;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class NominaDTO {
     //Sacado
     private String identificacion;
     private LocalDate fechaPago;
-    private BigDecimal salario; //sacado de relacion
+    private BigDecimal salario;
 
     //Ingresado
     private BigDecimal comisiones;
@@ -43,5 +44,9 @@ public class NominaDTO {
     private BigDecimal totDescuetos;
     private BigDecimal totDevengados;
     private BigDecimal pagoFinal;
+
+    //Persona
+    private Persona persona;
+
 
 }

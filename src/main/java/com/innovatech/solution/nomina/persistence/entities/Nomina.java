@@ -60,6 +60,8 @@ public class Nomina {
     @Column(name = "fondoSolid")
     private BigDecimal fondoSolid;
 
+    @Column(name = "totValHorExtra")
+    private BigDecimal totValHorExtra;
     @Column(name = "totDescuetos")
     private BigDecimal totDescuetos;
     @Column(name = "totDevengados")

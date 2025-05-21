@@ -2,6 +2,7 @@ package com.innovatech.solution.nomina.services.impl;
 
 import com.innovatech.solution.nomina.dto.JasperDTO;
 import com.innovatech.solution.nomina.dto.NominaDTO;
+import com.innovatech.solution.nomina.dto.PersonaDTO;
 import com.innovatech.solution.nomina.persistence.entities.DevengadosPrestaciones;
 import com.innovatech.solution.nomina.persistence.entities.Nomina;
 import com.innovatech.solution.nomina.persistence.entities.Persona;
@@ -11,6 +12,8 @@ import com.innovatech.solution.nomina.persistence.repositories.PersonaRepositori
 import com.innovatech.solution.nomina.services.NominaServicios;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.util.JRLoader;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ContentDisposition;
@@ -19,16 +22,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class NominaServiciosImpl implements NominaServicios {
@@ -95,6 +100,63 @@ public class NominaServiciosImpl implements NominaServicios {
     }
 
     @Override
+    public Map<String, Object> procesarExcel(MultipartFile file) {
+        List<NominaDTO> nominasProcesadas = new ArrayList<>();
+        List<Map<String, Object>> errores = new ArrayList<>();
+
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = new XSSFWorkbook(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+
+                try {
+                    NominaDTO dto = new NominaDTO();
+
+                    String identificacion = obtenerString(row.getCell(0));
+                    LocalDate fechaPago = obtenerFecha(row.getCell(1));
+
+                    // Validaciones de negocio
+                    validarIdentificacionYFecha(identificacion, fechaPago);
+
+                    dto.setIdentificacion(identificacion);
+                    dto.setFechaPago(fechaPago);
+                    dto.setComisiones(validarNumeroDecimalPositivo(row.getCell(2), "comisiones"));
+                    dto.setViaticos(validarNumeroDecimalPositivo(row.getCell(3), "viaticos"));
+                    dto.setGastosRepresentacion(validarNumeroDecimalPositivo(row.getCell(4), "gastosRepresentacion"));
+
+                    dto.setHorExtraDiu(validarNumeroEnteroPositivo(row.getCell(5), "horExtraDiu"));
+                    dto.setHorExtraNoc(validarNumeroEnteroPositivo(row.getCell(6), "horExtraNoc"));
+                    dto.setHorExtraDiuDomFes(validarNumeroEnteroPositivo(row.getCell(7), "horExtraDiuDomFes"));
+                    dto.setHorExtraNocDomFes(validarNumeroEnteroPositivo(row.getCell(8), "horExtraNocDomFes"));
+
+                    NominaDTO procesado = this.pagoNomina(dto); // crea la nómina
+                    nominasProcesadas.add(procesado);
+
+                } catch (Exception e) {
+                    Map<String, Object> error = new HashMap<>();
+                    error.put("fila", i + 1);
+                    error.put("identificacion", row.getCell(0) != null ? obtenerString(row.getCell(0)) : "N/A");
+                    error.put("error", e.getMessage());
+                    errores.add(error);
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error procesando el archivo", e);
+        }
+
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("nominasProcesadas", nominasProcesadas);
+        resultado.put("errores", errores);
+
+        return resultado;
+    }
+
+    @Override
     public NominaDTO pagoNomina(NominaDTO nominaDTO) {
         Persona persona = personaRepositorio.findByIdentificacion(nominaDTO.getIdentificacion())
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada "));
@@ -119,41 +181,43 @@ public class NominaServiciosImpl implements NominaServicios {
             }
         }
 
-       nominaDTO =  calcularPrestacionesSociales(nominaDTO);
-       nominaDTO =  calcularDeducciones(nominaDTO);
-       nominaDTO =  calcularTotales(nominaDTO);
+        nominaDTO = calcularPrestacionesSociales(nominaDTO);
+        nominaDTO = calcularDeducciones(nominaDTO);
+        nominaDTO = calcularTotales(nominaDTO);
 
-       Nomina nomina = Nomina.builder()
-               .personal(persona)
-               .fechaPago(nominaDTO.getFechaPago())
+        Nomina nomina = Nomina.builder()
+                .personal(persona)
+                .fechaPago(nominaDTO.getFechaPago())
 
-               .comisiones(nominaDTO.getComisiones())
-               .viaticos(nominaDTO.getViaticos())
-               .gastosRepresentacion(nominaDTO.getGastosRepresentacion())
-               .horExtraDiu(nominaDTO.getHorExtraDiu())
-               .horExtraNoc(nominaDTO.getHorExtraNoc())
-               .horExtraDiuDomFes(nominaDTO.getHorExtraDiuDomFes())
-               .horExtraNocDomFes(nominaDTO.getHorExtraNocDomFes())
+                .comisiones(nominaDTO.getComisiones())
+                .viaticos(nominaDTO.getViaticos())
+                .gastosRepresentacion(nominaDTO.getGastosRepresentacion())
+                .horExtraDiu(nominaDTO.getHorExtraDiu())
+                .horExtraNoc(nominaDTO.getHorExtraNoc())
+                .horExtraDiuDomFes(nominaDTO.getHorExtraDiuDomFes())
+                .horExtraNocDomFes(nominaDTO.getHorExtraNocDomFes())
 
-               .subsidioTransporte(nominaDTO.getSubsidioTransporte())
-               .prima(nominaDTO.getPrima())
-               .cesantias(nominaDTO.getCesantias())
-               .vacaciones(nominaDTO.getVacaciones())
+                .subsidioTransporte(nominaDTO.getSubsidioTransporte())
+                .prima(nominaDTO.getPrima())
+                .cesantias(nominaDTO.getCesantias())
+                .vacaciones(nominaDTO.getVacaciones())
 
-               .salud(nominaDTO.getSalud())
-               .pencion(nominaDTO.getPension()) // ¡OJO! en entidad está mal escrito como "pencion"
-               .retencionFuente(nominaDTO.getRetencionFuente())
-               .fondoSolid(nominaDTO.getFondoSolid())
+                .salud(nominaDTO.getSalud())
+                .pencion(nominaDTO.getPension()) //
+                .retencionFuente(nominaDTO.getRetencionFuente())
+                .fondoSolid(nominaDTO.getFondoSolid())
 
-               .totDescuetos(nominaDTO.getTotDescuetos())
-               .totDevengados(nominaDTO.getTotDevengados())
-               .pagoFinal(nominaDTO.getPagoFinal())
-               .build();
+                .totValHorExtra(nominaDTO.getTotValHorExtra())
+                .totDescuetos(nominaDTO.getTotDescuetos())
+                .totDevengados(nominaDTO.getTotDevengados())
+                .pagoFinal(nominaDTO.getPagoFinal())
+                .build();
 
-       nominaRepositorio.save(nomina);
-       return nominaDTO;
+        nominaRepositorio.save(nomina);
+        return nominaDTO;
     }
-    public NominaDTO calcularPrestacionesSociales(NominaDTO nominaDTO){
+
+    public NominaDTO calcularPrestacionesSociales(NominaDTO nominaDTO) {
         Persona persona = personaRepositorio.findByIdentificacion(nominaDTO.getIdentificacion())
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada con identificación: " + nominaDTO.getIdentificacion()));
 
@@ -165,8 +229,8 @@ public class NominaServiciosImpl implements NominaServicios {
 
         //Calculos Devengados Prestaciones
         BigDecimal salDev = valAuxTrasporte.add(valHorExtra).add(nominaDTO.getSalario()).add(nominaDTO.getComisiones());
-        guardarDevPrima(nominaDTO.getIdentificacion(),persona.getFechaIngreso(), salDev);
-        guardarDevCesantias(nominaDTO.getIdentificacion(),persona.getFechaIngreso(), salDev);
+        guardarDevPrima(nominaDTO.getIdentificacion(), persona.getFechaIngreso(), salDev);
+        guardarDevCesantias(nominaDTO.getIdentificacion(), persona.getFechaIngreso(), salDev);
 
 
         //PAGOS PRESTACIONES SOCIALES
@@ -185,7 +249,8 @@ public class NominaServiciosImpl implements NominaServicios {
 
         return nominaDTO;
     }
-    public NominaDTO calcularDeducciones(NominaDTO nominaDTO){
+
+    public NominaDTO calcularDeducciones(NominaDTO nominaDTO) {
         BigDecimal salud = calcularSalud(nominaDTO);
         nominaDTO.setSalud(salud);
 
@@ -200,7 +265,8 @@ public class NominaServiciosImpl implements NominaServicios {
 
         return nominaDTO;
     }
-    private NominaDTO calcularTotales(NominaDTO nominaDTO){
+
+    private NominaDTO calcularTotales(NominaDTO nominaDTO) {
         // Calcular total devengado
         BigDecimal totDevengados = nominaDTO.getSalario()
                 .add(nominaDTO.getSubsidioTransporte())
@@ -228,6 +294,7 @@ public class NominaServiciosImpl implements NominaServicios {
 
         return nominaDTO;
     }
+
     //Metodo para calcular si aplica auxilio de transporte
     public BigDecimal calcularAuxilioTransporte(BigDecimal sueldo) {
         if (sueldo.compareTo(this.SALARIO_MINIMO.multiply(BigDecimal.valueOf(2))) <= 0) {
@@ -236,6 +303,7 @@ public class NominaServiciosImpl implements NominaServicios {
             return BigDecimal.ZERO;
         }
     }
+
     //se calcula el valor a pagar de las horas extra
     private BigDecimal calcularPagoHorasExtras(NominaDTO nominaDTO) {
         BigDecimal valorHoraOrdinaria = nominaDTO.getSalario().divide(BigDecimal.valueOf(HORAS_MES), 2, BigDecimal.ROUND_HALF_UP);
@@ -255,7 +323,8 @@ public class NominaServiciosImpl implements NominaServicios {
 
         return totalPagoHorasExtras;
     }
-    public void guardarDevPrima(String identificacion,LocalDate fechaIngreso, BigDecimal salDev) {
+
+    public void guardarDevPrima(String identificacion, LocalDate fechaIngreso, BigDecimal salDev) {
         DevengadosPrestaciones devengadosPrestaciones = devPresRepositorio.findByIdentificacion(identificacion)
                 .orElseGet(() -> DevengadosPrestaciones.builder()
                         .identificacion(identificacion)
@@ -276,6 +345,7 @@ public class NominaServiciosImpl implements NominaServicios {
         // Guardar el registro en la base de datos
         devPresRepositorio.save(devengadosPrestaciones);
     }
+
     public BigDecimal calcularPrima(Persona persona, NominaDTO nominaDTO) {
         LocalDate fechaPago = nominaDTO.getFechaPago();
         int mes = fechaPago.getMonthValue();
@@ -306,6 +376,7 @@ public class NominaServiciosImpl implements NominaServicios {
         devPresRepositorio.actualizarRegistroPrima(nominaDTO.getIdentificacion(), fechaPago);
         return prima;
     }
+
     public void guardarDevCesantias(String identificacion, LocalDate fechaIngreso, BigDecimal salDev) {
         DevengadosPrestaciones devengadosPrestaciones = devPresRepositorio.findByIdentificacion(identificacion)
                 .orElseGet(() -> DevengadosPrestaciones.builder()
@@ -321,6 +392,7 @@ public class NominaServiciosImpl implements NominaServicios {
         // Guardar el registro en la base de datos
         devPresRepositorio.save(devengadosPrestaciones);
     }
+
     public BigDecimal calcularCesantias(Persona persona, NominaDTO nominaDTO) {
         LocalDate fechaPago = nominaDTO.getFechaPago();
         int mes = fechaPago.getMonthValue();
@@ -353,6 +425,7 @@ public class NominaServiciosImpl implements NominaServicios {
         devPresRepositorio.actualizarRegistroCesantias(nominaDTO.getIdentificacion(), fechaPago);
         return cesantias;
     }
+
     /*
     public void guardarDevVacaiones(String identificacion, LocalDate fechaIngreso, BigDecimal salDev) {
         Optional<DevengadosPrestaciones> registroExistente = devPresRepositorio.findByIdentificacion(identificacion);
@@ -401,6 +474,7 @@ public class NominaServiciosImpl implements NominaServicios {
 
         return baseCotizacion.multiply(new BigDecimal("0.04")); // 4% sobre la base
     }
+
     private BigDecimal calcularPension(NominaDTO nominaDTO) {
         BigDecimal pension = nominaDTO.getSalario()
                 .add(calcularPagoHorasExtras(nominaDTO)) // Incluir horas extras
@@ -409,6 +483,7 @@ public class NominaServiciosImpl implements NominaServicios {
         // Calcular el aporte del empleado (4% del IBC)
         return pension.multiply(new BigDecimal("0.04"));
     }
+
     private BigDecimal calcularFondoSolidaridad(NominaDTO nominaDTO) {
         BigDecimal cuatroSMMLV = SALARIO_MINIMO.multiply(new BigDecimal("4"));
         BigDecimal dieciseisSMMLV = SALARIO_MINIMO.multiply(new BigDecimal("16"));
@@ -435,6 +510,7 @@ public class NominaServiciosImpl implements NominaServicios {
 
         return nominaDTO.getPension().multiply(porcentaje).setScale(2, RoundingMode.HALF_UP);
     }
+
     private BigDecimal calcularRetencionFuente(NominaDTO nominaDTO) {
         // Obtener salario base, horas extras y comisiones
         BigDecimal ingresoBruto = nominaDTO.getSalario()
@@ -470,4 +546,75 @@ public class NominaServiciosImpl implements NominaServicios {
         return retencionUVT.multiply(valorUVT).setScale(2, RoundingMode.HALF_UP);
     }
 
+    //VALIDACIONES PARA CARGA DE NOMINAS CON EXCEL
+    private String obtenerString(Cell cell) {
+        if (cell == null || cell.getCellType() == CellType.BLANK) {
+            throw new IllegalArgumentException("El campo identificación está vacío");
+        }
+        return cell.getCellType() == CellType.STRING
+                ? cell.getStringCellValue()
+                : String.valueOf((long) cell.getNumericCellValue());
+    }
+
+    private LocalDate obtenerFecha(Cell cell) {
+        if (cell == null || cell.getCellType() != CellType.NUMERIC || !DateUtil.isCellDateFormatted(cell)) {
+            throw new IllegalArgumentException("El campo fecha es inválido o no tiene formato de fecha.");
+        }
+        return cell.getLocalDateTimeCellValue().toLocalDate();
+    }
+
+    private void validarIdentificacionYFecha(String identificacion, LocalDate fechaPago) {
+        Persona persona = personaRepositorio.findByIdentificacion(identificacion)
+                .orElseThrow(() -> new RuntimeException("Persona no encontrada para la identificación: " + identificacion));
+
+        LocalDate fechaIngreso = persona.getFechaIngreso();
+        if (fechaPago.isBefore(fechaIngreso)) {
+            throw new IllegalArgumentException("No se puede liquidar la nómina antes de la fecha de ingreso (" + fechaIngreso + ").");
+        }
+
+        Optional<Nomina> ultimaNomina = nominaRepositorio.findTopByPersonalIdentificacionOrderByFechaPagoDesc(identificacion);
+
+        if (ultimaNomina.isPresent()) {
+            LocalDate fechaUltimoPago = ultimaNomina.get().getFechaPago();
+            long diasDiferencia = ChronoUnit.DAYS.between(fechaUltimoPago, fechaPago);
+
+            if (diasDiferencia < 23) {
+                throw new IllegalArgumentException("No se puede liquidar la nómina: deben pasar al menos 23 días desde el último pago.");
+            }
+
+            if (diasDiferencia > 31) {
+                throw new IllegalArgumentException("No se puede liquidar la nómina: el periodo supera los 31 días permitidos.");
+            }
+        }
+    }
+
+    private Long validarNumeroEnteroPositivo(Cell cell, String campo) {
+        if (cell == null) return 0L;
+
+        if (cell.getCellType() != CellType.NUMERIC) {
+            throw new IllegalArgumentException("El campo " + campo + " debe ser numérico.");
+        }
+
+        double valor = cell.getNumericCellValue();
+        if (valor < 0) {
+            throw new IllegalArgumentException("El campo " + campo + " no puede ser negativo.");
+        }
+
+        return (long) valor;
+    }
+
+    private BigDecimal validarNumeroDecimalPositivo(Cell cell, String campo) {
+        if (cell == null) return BigDecimal.ZERO;
+
+        if (cell.getCellType() != CellType.NUMERIC) {
+            throw new IllegalArgumentException("El campo " + campo + " debe ser numérico.");
+        }
+
+        double valor = cell.getNumericCellValue();
+        if (valor < 0) {
+            throw new IllegalArgumentException("El campo " + campo + " no puede ser negativo.");
+        }
+
+        return BigDecimal.valueOf(valor);
+    }
 }
