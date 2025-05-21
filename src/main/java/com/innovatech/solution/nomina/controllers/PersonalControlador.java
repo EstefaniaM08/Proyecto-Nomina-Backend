@@ -37,7 +37,7 @@ public class PersonalControlador {
         return new ResponseEntity<>(personaServicios.persona(id), null, HttpStatus.OK);
     }
     @GetMapping("/busqueda-personas")
-    public ResponseEntity<List<Persona>> busquedaPagos(
+    public ResponseEntity<List<Persona>> busquedaPersonas(
             @RequestParam(required = false) String identificacion,
             @RequestParam(required = false) String apellidos,
             @RequestParam(required = false) String estado,

@@ -14,6 +14,7 @@ public abstract class Nomina_ {
 	public static volatile SingularAttribute<Nomina, BigDecimal> gastosRepresentacion;
 	public static volatile SingularAttribute<Nomina, Long> horExtraNoc;
 	public static volatile SingularAttribute<Nomina, BigDecimal> prima;
+	public static volatile SingularAttribute<Nomina, BigDecimal> totValHorExtra;
 	public static volatile SingularAttribute<Nomina, BigDecimal> pagoFinal;
 	public static volatile SingularAttribute<Nomina, Persona> personal;
 	public static volatile SingularAttribute<Nomina, LocalDate> fechaPago;
@@ -36,6 +37,7 @@ public abstract class Nomina_ {
 	public static final String GASTOS_REPRESENTACION = "gastosRepresentacion";
 	public static final String HOR_EXTRA_NOC = "horExtraNoc";
 	public static final String PRIMA = "prima";
+	public static final String TOT_VAL_HOR_EXTRA = "totValHorExtra";
 	public static final String PAGO_FINAL = "pagoFinal";
 	public static final String PERSONAL = "personal";
 	public static final String FECHA_PAGO = "fechaPago";
