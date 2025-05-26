@@ -6,26 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="4190fe99-b3e7-442f-9c7e-008969576275" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/PagoNominaControlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/PagoNominaControlador.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/PersonalControlador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/controllers/PersonalControlador.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/NominaDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/dto/NominaDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Nomina.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/persistence/entities/Nomina.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/ConsultasPagoServicios.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/ConsultasPagoServicios.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/NominaServicios.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/NominaServicios.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/ConsultasPagoServiciosImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/ConsultasPagoServiciosImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/NominaServiciosImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/innovatech/solution/nomina/services/impl/NominaServiciosImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/PagoNominaControlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/PagoNominaControlador.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/PersonalControlador.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/controllers/PersonalControlador.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/NominaDTO$NominaDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/NominaDTO$NominaDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/NominaDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/dto/NominaDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Nomina$NominaBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Nomina$NominaBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Nomina.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Nomina.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Nomina_.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/persistence/entities/Nomina_.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/ConsultasPagoServicios.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/ConsultasPagoServicios.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/impl/ConsultasPagoServiciosImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/impl/ConsultasPagoServiciosImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/impl/NominaServiciosImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/innovatech/solution/nomina/services/impl/NominaServiciosImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Nomina_.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/innovatech/solution/nomina/persistence/entities/Nomina_.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +30,7 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
       </MavenGeneralSettings>
     </option>
     <option name="importingSettings">
@@ -66,23 +50,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;HU009__consulta__nominas&quot;,
-    &quot;ignore.preview.features.used&quot;: &quot;true&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/TRABAJOS PROGRAMACION/Spring Boot/Ramas Proyectos/nomina_back_final&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.Mappings&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.NominaApplication.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "estefania-prueba-front",
+    "ignore.preview.features.used": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/TRABAJOS PROGRAMACION/Spring Boot/Ramas Proyectos/nomina_back_final",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "project.propVCSSupport.Mappings"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\TRABAJOS PROGRAMACION\Spring Boot\Ramas Proyectos\nomina_back_final\src\main\resources\static\img" />
