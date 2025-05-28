@@ -43,8 +43,8 @@ public class PagoNominaControlador {
         return ResponseEntity.ok(resultado);
     }
 
-    @GetMapping("/crear-pdf")
-    public ResponseEntity<ByteArrayResource> crearPdf(@RequestBody JasperDTO jasper){
+    @PostMapping("/crear-pdf")
+    public ResponseEntity<ByteArrayResource> crearPdf(@RequestBody JasperDTO jasper) {
         System.out.println(jasper);
         return nominaServicios.crearPdf(jasper);
     }
